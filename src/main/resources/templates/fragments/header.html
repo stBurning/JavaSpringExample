@@ -1,0 +1,31 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header th:fragment="header">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-0 bg-white border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal"><a href="/">Mathematics</a></h5>
+        <a class="mr-2 btn btn-outline-primary" href="/add">Добавить статью</a><br>
+        <a class="btn btn-outline-primary" href="/login" sec:authorize="!isAuthenticated()">Sign In</a>
+        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+            <input type="submit" class="btn btn-outline-primary" value="Sign Out"/>
+        </form>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-0">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+            <div class="navbar-nav ">
+                <small><a class="nav-item nav-link" href="/">Все статьи</a></small>
+                <div th:each="tag : ${tags}">
+                    <small><a class="nav-item nav-link" th:text="${tag.label}" th:href="'/category/' + ${tag.slug}"></a></small>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+</header>
+</html>

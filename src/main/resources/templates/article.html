@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Mathematics</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
+<div th:replace="/fragments/header :: header"></div>
+<body>
+<style>
+    img {
+        display: inline-block;
+        height: auto;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<!--Post-->
+<div class="container ">
+    <div class="jumbotron mt-5 pt-4 pb-4">
+        <h1 th:text="${article.getTitle()}"></h1>
+        <small th:text="'Опубликовано: ' + ${#dates.format(article.getCreateDate(), 'dd MMM yyyy')} +
+        ' - ' + ${article.getAuthor().getUsername()}"></small>
+        <div class="d-inline" th:each="tag: ${article.getTags()}">
+                <span class="badge badge-pill badge-info"><a class="text-white" href="#"
+                                                             th:text="${tag.getLabel()}"></a></span>
+
+        </div>
+        <div th:utext="${article.getBody()}" class="mt-2">
+
+        </div>
+    </div>
+    <!--Leave a comment button-->
+    <!--Only if authenticated-->
+    <div sec:authorize="isAuthenticated()">
+
+            <div class="container mt-5 mb-5 pt-4 pb-4">
+
+                <form autocomplete="off" action="#" th:action="@{'/article/{id}/comment'(id=${article.id})}"
+                      th:object="${comment}" method="post" role="form">
+                    <div class="form-group">
+                        <label th:if="${#fields.hasErrors('body')}" th:errors="*{body}"
+                               class="alert alert-danger"></label>
+                        <textarea th:field="*{body}"
+                                  placeholder="Напишите свой комментарий" class="form-control input-lg"/>
+                    </div>
+                    <input name="article" type="hidden" th:field="*{article}"/>
+                    <input name="user" type="hidden" th:field="*{user}"/>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Отправить</button>
+                    </div>
+                </form>
+            </div>
+    </div>
+
+<!--   Комментарии   -->
+    <div class="container mt-5 ">
+        <h4>Комментарии:</h4>
+        <div th:each="comment : ${comments}" class="jumbotron mt-2 pt-3 pb-3">
+            <div>
+            <small th:text="${#dates.format(comment.getCreateDate(), 'dd-MMM-yyyy')} +
+        ' - ' + ${comment.getUser().getUsername()}"></small></div>
+            <div th:utext="${comment.getBody()}"></div>
+        </div>
+    </div>
+</div>
+</body>
+<div th:replace="/fragments/footer :: footer"></div>
+</html>

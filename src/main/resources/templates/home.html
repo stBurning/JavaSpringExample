@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Mathematics</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<div th:replace="/fragments/header :: header"></div>
+
+<body>
+<style>
+    img {
+        display: inline-block;
+        height: auto;
+        max-width: 100%;
+    }
+
+
+</style>
+<div class="container mt-5">
+    <h3>Последние статьи:</h3>
+    <div th:each="article : ${articles}">
+        <div class="jumbotron mt-2 pt-4 pb-4">
+            <small th:text="'Опубликовано: ' + ${#dates.format(article.getCreateDate(), 'dd MMM yyyy')} +
+        ' - ' + ${article.getAuthor().getUsername()}"></small>
+
+            <div class="d-inline" th:each="tag: ${article.getTags()}">
+                <span class="badge badge-pill badge-info"><a class="text-white" href="#"
+                                                             th:text="${tag.getLabel()}"></a></span>
+
+            </div>
+            <h3 th:text="${article.getTitle()}"></h3>
+            <div th:utext="${article.getIntro()}"></div>
+            <a th:href="'/article/' + ${article.id}">Продолжить чтение</a>
+        </div>
+    </div>
+</div>
+</body>
+<div th:replace="/fragments/footer :: footer"></div>
+</html>
